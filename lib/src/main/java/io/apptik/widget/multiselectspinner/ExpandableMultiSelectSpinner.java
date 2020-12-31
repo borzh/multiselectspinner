@@ -18,7 +18,6 @@ package io.apptik.widget.multiselectspinner;
 
 
 import android.annotation.SuppressLint;
-import android.support.v7.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Build;
@@ -27,6 +26,8 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
+
+import androidx.appcompat.app.AlertDialog;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -74,7 +75,7 @@ public class ExpandableMultiSelectSpinner extends BaseMultiSelectSpinner {
     }
 
 
-    public ExpandableMultiSelectSpinner setItems(LinkedHashMap<String, List<String>> items) {
+    public ExpandableMultiSelectSpinner setItems(LinkedHashMap<String, List<String>> items, boolean selectAll) {
         this.mapItems = items;
         this.items = new ArrayList<>();
         for(List<String> its:mapItems.values()) {
@@ -99,7 +100,11 @@ public class ExpandableMultiSelectSpinner extends BaseMultiSelectSpinner {
         return this;
     }
 
-    @SuppressLint("NewApi")
+    public ExpandableMultiSelectSpinner setItems(LinkedHashMap<String, List<String>> items) {
+        return setItems(items, false);
+    }
+
+        @SuppressLint("NewApi")
     @Override
     public boolean performClick() {
         AlertDialog.Builder builder;
@@ -162,7 +167,11 @@ public class ExpandableMultiSelectSpinner extends BaseMultiSelectSpinner {
         builder.setView(myList);
         dialog = builder.create();
         dialog.show();
-        if(titleDividerDrawable !=null && dialog!=null) {
+
+        if (listener != null)
+            listener.onCreateSelectionDialog(dialog);
+
+        if(titleDividerDrawable !=null) {
             int dividerId = dialog.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
             View divider = dialog.findViewById(dividerId);
             if((Build.VERSION.SDK_INT > 15)) {
@@ -172,7 +181,7 @@ public class ExpandableMultiSelectSpinner extends BaseMultiSelectSpinner {
             }
         }
 
-        if(titleDividerColor != 0 && dialog!=null) {
+        if(titleDividerColor != 0) {
             int dividerId = dialog.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
             View divider = dialog.findViewById(dividerId);
             divider.setBackgroundColor(titleDividerColor);

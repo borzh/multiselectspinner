@@ -18,7 +18,6 @@ package io.apptik.widget.multiselectspinner;
 
 
 import android.annotation.SuppressLint;
-import android.support.v7.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Build;
@@ -28,6 +27,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+
+import androidx.appcompat.app.AlertDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +53,10 @@ public class MultiSelectSpinner extends BaseMultiSelectSpinner {
     }
 
     public MultiSelectSpinner setItems(List<String> items) {
+        return setItems(items, false);
+    }
+
+    public MultiSelectSpinner setItems(List<String> items, boolean selectAll) {
         this.items = items;
 
         // all selected by default
@@ -71,6 +76,10 @@ public class MultiSelectSpinner extends BaseMultiSelectSpinner {
     }
 
     public BaseMultiSelectSpinner setListAdapter(ListAdapter listAdapter) {
+        return setListAdapter(listAdapter, false);
+    }
+
+    public BaseMultiSelectSpinner setListAdapter(ListAdapter listAdapter, boolean selectAll) {
         this.listAdapter = listAdapter;
         this.items = new ArrayList<String>();
         selected = new boolean[listAdapter.getCount()];
@@ -79,7 +88,6 @@ public class MultiSelectSpinner extends BaseMultiSelectSpinner {
             if(selectAll) {
                 selected[i] = true;
             }
-
         }
 
         // all text on the spinner
@@ -94,7 +102,6 @@ public class MultiSelectSpinner extends BaseMultiSelectSpinner {
         return this.listAdapter;
     }
 
-  //  @SuppressLint("NewApi")
     @SuppressLint("NewApi")
     @Override
     public boolean performClick() {
@@ -118,16 +125,20 @@ public class MultiSelectSpinner extends BaseMultiSelectSpinner {
                 }
         );
 
-        if(listAdapter!=null) {
-            builder.setAdapter(this.listAdapter, null);
+        if (listAdapter != null) {
+            builder.setAdapter(listAdapter, null);
             dialog = builder.create();
             dialog.getListView().setItemsCanFocus(false);
             dialog.getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+
+            if (listener != null)
+                listener.onCreateSelectionDialog(dialog);
 
             dialog.show();
             for(int i=0;i<listAdapter.getCount();i++) {
                 dialog.getListView().setItemChecked(i,selected[i]);
             }
+
             dialog.getListView().setOnItemClickListener(new OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -145,42 +156,40 @@ public class MultiSelectSpinner extends BaseMultiSelectSpinner {
                             selected[position] = !selected[position];
                         }
                     }
-
-
                 }
             });
         } else if(items!=null) {
-            dialog = builder.setMultiChoiceItems(items.toArray(new CharSequence[items.size()]), selected, this).show();
+            dialog = builder.setMultiChoiceItems(items.toArray(new CharSequence[items.size()]), selected, this).create();
+            if (listener != null)
+                listener.onCreateSelectionDialog(dialog);
+            dialog.show();
         } else {
             dialog = null;
         }
-        if(titleDividerDrawable !=null && dialog!=null) {
-            int dividerId = dialog.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
-            View divider = dialog.findViewById(dividerId);
-            if(divider!=null) {
-                if ((Build.VERSION.SDK_INT > 15)) {
-                    divider.setBackground(titleDividerDrawable);
-                } else {
-                    divider.setBackgroundDrawable(titleDividerDrawable);
+
+        if (dialog != null) {
+            if(titleDividerDrawable !=null) {
+                int dividerId = dialog.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
+                View divider = dialog.findViewById(dividerId);
+                if(divider!=null) {
+                    if ((Build.VERSION.SDK_INT > 15)) {
+                        divider.setBackground(titleDividerDrawable);
+                    } else {
+                        divider.setBackgroundDrawable(titleDividerDrawable);
+                    }
                 }
             }
-        }
 
-        if(titleDividerColor != 0 && dialog!=null) {
-            int dividerId = dialog.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
-            View divider = dialog.findViewById(dividerId);
-            if(divider!=null) {
-                divider.setBackgroundColor(titleDividerColor);
+            if(titleDividerColor != 0) {
+                int dividerId = dialog.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
+                View divider = dialog.findViewById(dividerId);
+                if(divider!=null) {
+                    divider.setBackgroundColor(titleDividerColor);
+                }
             }
-        }
-        if(dialog==null) {
-            return false;
-        } else {
             return true;
+        } else {
+            return false;
         }
     }
-
-
-
-
 }

@@ -24,22 +24,22 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.v7.app.AlertDialog;
 import android.util.AttributeSet;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
-import android.widget.Spinner;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.AppCompatSpinner;
 
 import java.util.List;
 
-public abstract class BaseMultiSelectSpinner extends Spinner implements
+public abstract class BaseMultiSelectSpinner extends AppCompatSpinner implements
         OnMultiChoiceClickListener, DialogInterface.OnCancelListener {
 
     protected String allCheckedText = "";
     protected String allUncheckedText = "";
     protected MultiSpinnerListener listener;
     protected ListAdapter listAdapter;
-    protected boolean selectAll;
     protected int minSelectedItems =0;
     protected int maxSelectedItems = Integer.MAX_VALUE;
     protected String title = null;
@@ -245,25 +245,22 @@ public abstract class BaseMultiSelectSpinner extends Spinner implements
         return true;
     }
 
-    public <T extends BaseMultiSelectSpinner> T setSelectAll(boolean selectAll) {
-        if(this.selectAll != selectAll) {
-            this.selectAll = selectAll;
-            if (selected != null) {
-                if (selectAll) {
-                    for (int i = 0; i < selected.length; i++) {
-                        selected[i] = true;
-                    }
-                } else {
-                    for (int i = 0; i < selected.length; i++) {
-                        selected[i] = false;
-                    }
-                }
+    public <T extends BaseMultiSelectSpinner> T setSelectAll(boolean selectAll, boolean refreshSpinner) {
+        if (selected != null) {
+            for (int i = 0; i < selected.length; i++) {
+                selected[i] = selectAll;
+            }
+            if (refreshSpinner) {
                 ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getContext(),
-                        spinnerItemLayout, new String[]{(isSelectAll()) ? allCheckedText : allUncheckedText});
+                        spinnerItemLayout, new String[]{selectAll ? allCheckedText : allUncheckedText});
                 setAdapter(spinnerAdapter);
             }
         }
         return (T)this;
+    }
+
+    public <T extends BaseMultiSelectSpinner> T setSelectAll(boolean selectAll) {
+        return setSelectAll(selectAll, true);
     }
 
     public int getMinSelectedItems() {
@@ -283,10 +280,6 @@ public abstract class BaseMultiSelectSpinner extends Spinner implements
         this.maxSelectedItems = maxSelectedItems;
         return (T)this;
     }
-
-//    public int getCurrCheckedItems() {
-//        return currCheckedItems;
-//    }
 
     @Override
     public void onClick(DialogInterface dialog, int which, boolean isChecked) {
@@ -330,6 +323,7 @@ public abstract class BaseMultiSelectSpinner extends Spinner implements
 
     public interface MultiSpinnerListener {
         public void onItemsSelected(boolean[] selected);
+        public void onCreateSelectionDialog(AlertDialog dialog);
     }
 
 

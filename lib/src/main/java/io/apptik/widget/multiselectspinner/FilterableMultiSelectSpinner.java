@@ -17,7 +17,6 @@
 package io.apptik.widget.multiselectspinner;
 
 
-import android.support.v7.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
@@ -27,6 +26,8 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+
+import androidx.appcompat.app.AlertDialog;
 
 public class FilterableMultiSelectSpinner extends MultiSelectSpinner implements
         OnMultiChoiceClickListener, DialogInterface.OnCancelListener {
@@ -94,6 +95,8 @@ public class FilterableMultiSelectSpinner extends MultiSelectSpinner implements
                 }
             });
             dialog.setView(input);
+            if (listener != null)
+                listener.onCreateSelectionDialog(dialog);
             return true;
         } else if(items!=null) {
             final AlertDialog dialog =  builder
@@ -102,6 +105,8 @@ public class FilterableMultiSelectSpinner extends MultiSelectSpinner implements
 
             dialog.show();
             dialog.setView(input);
+            if (listener != null)
+                listener.onCreateSelectionDialog(dialog);
             return true;
 
         }

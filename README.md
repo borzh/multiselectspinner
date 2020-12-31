@@ -3,21 +3,15 @@ multiselectspinner
 
 [![Build Status](https://travis-ci.org/apptik/multiselectspinner.svg?branch=master)](https://travis-ci.org/apptik/multiselectspinner)
 
+(NOTE) This is a modification of original io.apptik.widget.multiselectspinner by adding the ability to have select all / none buttons (check out first example in MainActivity.java).
+
 Multi functional and selectable spinner for Android
 
 ##Download
 
-Find [the latest JARs][mvn] or grab via Maven:
-```xml
-<dependency>
-  <groupId>io.apptik.widget</groupId>
-  <artifactId>multiselectspinner</artifactId>
-  <version>1.0.12</version>
-</dependency>
-```
-or Gradle:
+Gradle:
 ```groovy
-compile 'io.apptik.widget:multiselectspinner:1.0.12'
+implementation 'com.github.borzh:MultiSelectSpinner:-SNAPSHOT'
 ```
 
 Downloads of the released versions are available in [Sonatype's `releases` repository][release].

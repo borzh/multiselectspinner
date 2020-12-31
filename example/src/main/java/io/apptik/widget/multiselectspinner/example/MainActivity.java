@@ -16,11 +16,17 @@
 
 package io.apptik.widget.multiselectspinner.example;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -30,7 +36,7 @@ import io.apptik.widget.multiselectspinner.ExpandableMultiSelectSpinner;
 import io.apptik.widget.multiselectspinner.MultiSelectSpinner;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,13 +52,46 @@ public class MainActivity extends ActionBarActivity {
         options.add("C");
 
 
-        MultiSelectSpinner multiSelectSpinner1 = (MultiSelectSpinner) findViewById(R.id.multiselectSpinner1);
+        final MultiSelectSpinner multiSelectSpinner1 = (MultiSelectSpinner) findViewById(R.id.multiselectSpinner1);
         multiSelectSpinner1.setItems(options)
 
                 .setListener(new MultiSelectSpinner.MultiSpinnerListener() {
                     @Override
                     public void onItemsSelected(boolean[] selected) {
+                        int i = 0;
+                    }
 
+                    @Override
+                    public void onCreateSelectionDialog(final AlertDialog alertDialog) {
+                        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Select all", (DialogInterface.OnClickListener)null);
+                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Select none", (DialogInterface.OnClickListener)null);
+                        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                            @Override
+                            public void onShow(DialogInterface dialogInterface) {
+                                Button button = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+                                button.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        ListView listView = alertDialog.getListView();
+                                        for ( int i=0; i < listView.getAdapter().getCount(); i++) {
+                                            listView.setItemChecked(i, true);
+                                        }
+                                        multiSelectSpinner1.setSelectAll(true, false);
+                                    }
+                                });
+                                button = alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL);
+                                button.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        ListView listView = alertDialog.getListView();
+                                        for ( int i=0; i < listView.getAdapter().getCount(); i++) {
+                                            listView.setItemChecked(i, false);
+                                        }
+                                        multiSelectSpinner1.setSelectAll(false, false);
+                                    }
+                                });
+                            }
+                        });
                     }
                 })
                 .setAllCheckedText("All types")
@@ -81,6 +120,10 @@ public class MainActivity extends ActionBarActivity {
                     public void onItemsSelected(boolean[] selected) {
 
                     }
+                    @Override
+                    public void onCreateSelectionDialog(AlertDialog dialog) {
+
+                    }
                 })
                 .setAllCheckedText("All types")
                 .setAllUncheckedText("none selected")
@@ -95,6 +138,10 @@ public class MainActivity extends ActionBarActivity {
                 .setListener(new MultiSelectSpinner.MultiSpinnerListener() {
                     @Override
                     public void onItemsSelected(boolean[] selected) {
+
+                    }
+                    @Override
+                    public void onCreateSelectionDialog(AlertDialog dialog) {
 
                     }
                 })
@@ -112,6 +159,10 @@ public class MainActivity extends ActionBarActivity {
                     public void onItemsSelected(boolean[] selected) {
 
                     }
+                    @Override
+                    public void onCreateSelectionDialog(AlertDialog dialog) {
+
+                    }
                 })
                 .setAllCheckedText("All types")
                 .setAllUncheckedText("none selected")
@@ -124,6 +175,10 @@ public class MainActivity extends ActionBarActivity {
                 .setListener(new MultiSelectSpinner.MultiSpinnerListener() {
                     @Override
                     public void onItemsSelected(boolean[] selected) {
+
+                    }
+                    @Override
+                    public void onCreateSelectionDialog(AlertDialog dialog) {
 
                     }
                 })
@@ -181,6 +236,10 @@ public class MainActivity extends ActionBarActivity {
                     public void onItemsSelected(boolean[] selected) {
 
                     }
+                    @Override
+                    public void onCreateSelectionDialog(AlertDialog dialog) {
+
+                    }
                 })
                 .setAllCheckedText("All types")
                 .setAllUncheckedText("none selected")
@@ -194,6 +253,10 @@ public class MainActivity extends ActionBarActivity {
                 .setListener(new MultiSelectSpinner.MultiSpinnerListener() {
                     @Override
                     public void onItemsSelected(boolean[] selected) {
+
+                    }
+                    @Override
+                    public void onCreateSelectionDialog(AlertDialog dialog) {
 
                     }
                 })
@@ -211,6 +274,10 @@ public class MainActivity extends ActionBarActivity {
                     public void onItemsSelected(boolean[] selected) {
 
                     }
+                    @Override
+                    public void onCreateSelectionDialog(AlertDialog dialog) {
+
+                    }
                 })
                 .setAllCheckedText("All types")
                 .setAllUncheckedText("none selected")
@@ -224,6 +291,10 @@ public class MainActivity extends ActionBarActivity {
                 .setListener(new MultiSelectSpinner.MultiSpinnerListener() {
                     @Override
                     public void onItemsSelected(boolean[] selected) {
+
+                    }
+                    @Override
+                    public void onCreateSelectionDialog(AlertDialog dialog) {
 
                     }
                 })
